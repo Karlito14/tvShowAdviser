@@ -3,6 +3,7 @@ import { TVShowAPI } from './api/tv-show';
 import './global.css';
 import style from './style.module.css';
 import { BACKDROP_BASE_URL } from './config';
+import { TVShowDescription } from './components/TVShowDescription/TvShowDescription';
 
 export const App = () => {
     const[currentTVShow, setCurrentTVShow] = useState();
@@ -20,8 +21,6 @@ export const App = () => {
     useEffect(() => {
         fetchPopulars();
     }, []);
-
-    console.log(currentTVShow)
 
     return(
         <div 
@@ -41,7 +40,9 @@ export const App = () => {
                     </div>
                 </div>
             </div>
-            <div className={style.description}>Description</div>
+            <div className={style.description}>
+                {currentTVShow && <TVShowDescription tvShow={currentTVShow} />}
+            </div>
             <div className={style.recommandations}>Recommandations</div>
         </div>
     )
