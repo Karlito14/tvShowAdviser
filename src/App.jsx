@@ -4,6 +4,9 @@ import './global.css';
 import style from './style.module.css';
 import { BACKDROP_BASE_URL } from './config';
 import { TVShowDescription } from './components/TVShowDescription/TvShowDescription';
+import { Logo } from './components/Logo/Logo';
+import { TVShowListItem } from './components/TVShowListItem/TVShowListItem';
+import logo from './assets/images/logo.png';
 
 export const App = () => {
     const[currentTVShow, setCurrentTVShow] = useState();
@@ -22,6 +25,10 @@ export const App = () => {
         fetchPopulars();
     }, []);
 
+    const setTVShowFromRecommandation = (tvShow) => {
+
+    };
+
     return(
         <div 
             className={style.main_container}
@@ -32,8 +39,7 @@ export const App = () => {
             <div className={style.header}>
                 <div className='row'>
                     <div className='col-4'>
-                        <div>Logo</div>
-                        <div>Subtitle</div>
+                        <Logo title={'Watowatch'} subtitle={'Find a show you may like'} image={logo}/>
                     </div>
                     <div className='col-sm-12 col-md-4'>
                         <input type='text' />
@@ -43,7 +49,13 @@ export const App = () => {
             <div className={style.description}>
                 {currentTVShow && <TVShowDescription tvShow={currentTVShow} />}
             </div>
-            <div className={style.recommandations}>Recommandations</div>
+            <div className={style.recommandations}>
+                {currentTVShow && 
+                <TVShowListItem 
+                    tvShow={currentTVShow} 
+                    onClick={setTVShowFromRecommandation} 
+                />}
+            </div>
         </div>
     )
 }
