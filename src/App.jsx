@@ -5,11 +5,12 @@ import style from './style.module.css';
 import { BACKDROP_BASE_URL } from './config';
 import { TVShowDescription } from './components/TVShowDescription/TvShowDescription';
 import { Logo } from './components/Logo/Logo';
-import { TVShowListItem } from './components/TVShowListItem/TVShowListItem';
+import { TVShowList } from './components/TVShowList/TVShowList';
 import logo from './assets/images/logo.png';
 
 export const App = () => {
     const[currentTVShow, setCurrentTVShow] = useState();
+    const [recommendationList, setRecommendationList] = useState([]);
     
     async function fetchPopulars () {
         try{
@@ -21,12 +22,30 @@ export const App = () => {
             console.error(error);
         }
     }
+
+    async function fetchRecommendations (tvShowId) {
+        try{
+            const recommendations = await TVShowAPI.fetchRecommendations(tvShowId);
+            if(recommendations.length > 0) {
+                setRecommendationList(recommendations.slice(0, 10));
+            };
+        } catch(error) {
+            console.error(error);
+        }
+    }
+
     useEffect(() => {
         fetchPopulars();
     }, []);
 
-    const setTVShowFromRecommandation = (tvShow) => {
+    useEffect(() => {
+        if(currentTVShow){
+            fetchRecommendations(currentTVShow.id);
+        }
+    }, [currentTVShow]);
 
+    const setTVShowFromRecommendation = (tvShow) => {
+        setCurrentTVShow(tvShow);
     };
 
     return(
@@ -50,10 +69,10 @@ export const App = () => {
                 {currentTVShow && <TVShowDescription tvShow={currentTVShow} />}
             </div>
             <div className={style.recommandations}>
-                {currentTVShow && 
-                <TVShowListItem 
-                    tvShow={currentTVShow} 
-                    onClick={setTVShowFromRecommandation} 
+                {recommendationList && recommendationList.length > 0 && 
+                <TVShowList 
+                    tvShowList={recommendationList}
+                    onClickItem={setTVShowFromRecommendation}
                 />}
             </div>
         </div>
