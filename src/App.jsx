@@ -7,6 +7,7 @@ import { TVShowDescription } from './components/TVShowDescription/TvShowDescript
 import { Logo } from './components/Logo/Logo';
 import { TVShowList } from './components/TVShowList/TVShowList';
 import logo from './assets/images/logo.png';
+import { SearchBar } from './components/SearchBar/SearchBar';
 
 export const App = () => {
     const[currentTVShow, setCurrentTVShow] = useState();
@@ -33,6 +34,17 @@ export const App = () => {
             console.error(error);
         }
     }
+
+    async function searchTVShow (tvShowName) {
+        try{
+            const searchResponse = await TVShowAPI.fetchByTitle(tvShowName);
+            if(searchResponse.length > 0){
+                setCurrentTVShow(searchResponse[0]);
+            }
+        } catch(error) {
+            console.error(error);
+        }
+    };
 
     useEffect(() => {
         fetchPopulars();
@@ -61,7 +73,7 @@ export const App = () => {
                         <Logo title={'Watowatch'} subtitle={'Find a show you may like'} image={logo}/>
                     </div>
                     <div className='col-sm-12 col-md-4'>
-                        <input type='text' />
+                        <SearchBar onSubmit={searchTVShow} />
                     </div>
                 </div>
             </div>
